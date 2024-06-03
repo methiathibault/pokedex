@@ -1,50 +1,51 @@
 import React, { useEffect, useState } from 'react'
-import './PokemonInfo.jsx'
-import PokemonInfo from './PokemonInfo.jsx'
 
 export default function PokemonList() {
     const [pokemons, setPokemons] = useState([])
+    const [page, setPage] = useState(1)
+    const pokemonPerPage = 20
 
     useEffect(() => {
-        async function tata() {
-          const test = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=20', {
+        getAllPokemons(page)
+    }, [page])
+
+    async function getAllPokemons(page) {
+        const offset = (page - 1) * pokemonPerPage
+        const allPokemons = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/?limit=${pokemonPerPage}&offset=${offset}`, {
                 method: 'GET',
             })
                 .then(response => response.json())
-                toto(test.results)
-            console.log('test', test)
+            getAllInfos(allPokemons.results)
+      }
 
-                // .then(data => setPokemons(data.results))
-                // .catch(error => console.error(error))
-        }
-        tata()
-    }, [])
-
-    
-    async function toto (data) {
-        data.map(async pokemon => {
-            console.log(pokemon)
-         await fetch(pokemon.url, {
+    async function getAllInfos (data) {
+        setPokemons([]);
+        const pokemonsData = await Promise.all(data.map(async pokemon => {
+            return fetch(pokemon.url, {
             method: 'GET',
         })
             .then(response => response.json())
-            .then(data => setPokemons(prevPokemon => [...prevPokemon, data]))
             .catch(error => console.error(error))
-    })
-}
-    console.log('pokemons', pokemons)
+        }))
+        const sortedPokemonsData = pokemonsData.sort((a, b) => a.id - b.id);
+        setPokemons(sortedPokemonsData)
+    }
+
     return (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '10px' }}>
             {pokemons.length !== 0 && 
             <>
-            {pokemons.map(pokemon => (
-                <div key={pokemon.id}>
-                    <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-                    {pokemon.name} 
-                </div>
-            ))}
+                {pokemons.map(pokemon => (
+                    <div key={pokemon.id}>
+                        <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+                        {pokemon.name} 
+                    </div>
+                ))}
             </>
-        }
+            }
+            <button onClick={() => setPage(prevPage => prevPage - 1)} disabled={page === 1}>Previous</button>
+            <button onClick={() => setPage(prevPage => prevPage + 1)}>Next</button>
         </div>
     )
 }
