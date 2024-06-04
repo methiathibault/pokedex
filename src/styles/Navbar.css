@@ -1,0 +1,22 @@
+.navbar {
+    background-color: #FF0000;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center; /* Align items vertically */
+}
+
+.navbar img {
+    height: 50px; /* Adjust as needed */
+    width: auto; /* Maintain aspect ratio */
+}
+
+.navbar a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.navbar a:hover {
+    color: #FFCC00;
+}

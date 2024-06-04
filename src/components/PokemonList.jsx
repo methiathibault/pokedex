@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PokemonCardList from './PokemonCardList'
 import '../styles/PokemonList.css'
 
 export default function PokemonList() {
@@ -34,23 +35,8 @@ export default function PokemonList() {
     }
 
     return (
-        <div className="pokemon-grid">
-            {pokemons.length !== 0 && 
-            <>
-                {pokemons.map(pokemon => (
-                    <div key={pokemon.id} className='pokemon-card'>
-                        <img src={pokemon.sprites.front_default} alt={pokemon.name} className='pokemon-image' />
-                        <p className='pokemon-name'>{pokemon.name}</p>
-                        <p className='pokemon-id'>{pokemon.id}</p>
-                        <p className='pokemon-type'>
-                        {pokemon.types.map(type => (
-                            <span key={type.slot}>{type.type.name} </span>
-                        ))}
-                        </p>
-                    </div>
-                ))}
-            </>
-            }
+        <div>
+            <PokemonCardList pokemons={pokemons} isPokemonList={true} />
             <button className='pagination-button' onClick={() => setPage(prevPage => prevPage - 1)} disabled={page === 1}>Previous</button>
             <button className='pagination-button' onClick={() => setPage(prevPage => prevPage + 1)}>Next</button>
         </div>
