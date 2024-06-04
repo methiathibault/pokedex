@@ -2,16 +2,19 @@ import React, {useState, useEffect} from 'react';
 import uuid from 'react-uuid';
 
 export default function PokemonCardList({ pokemons, isPokemonList }) {
-    const [refresher, setRefresher] = useState(false); 
+    const [refresher, setRefresher] = useState(false);
+    const [addedPokemonIds, setAddedPokemonIds] = useState([]);
 
     const add = (pokemon) => {
         const id = uuid();
         localStorage.setItem(id, JSON.stringify({...pokemon, uuid: id}));
+        setAddedPokemonIds(prevIds => [...prevIds, pokemon.id]);
     }
 
     const remove = (pokemon) => {     
         localStorage.removeItem(pokemon.uuid);
         setRefresher(prev => !prev);
+        setAddedPokemonIds(prevIds => prevIds.filter(id => id !== pokemon.id));
     }
 
     useEffect(() => {
@@ -34,7 +37,7 @@ export default function PokemonCardList({ pokemons, isPokemonList }) {
                             <span key={type.slot}>{type.type.name} </span>
                         ))}
                         </p>
-                        {isPokemonList && <button className='pokemon-button' onClick={() => add(pokemon)}>Add to Pokedex</button>}
+                        {isPokemonList && <button className='pokemon-button' onClick={() => add(pokemon)} disabled={addedPokemonIds.includes(pokemon.id)}>Add to Pokedex</button>}
                         {!isPokemonList && <button className='pokemon-button' onClick={() => remove(pokemon)}>Remove from Pokedex</button>}
                     </div>
                 ))}
