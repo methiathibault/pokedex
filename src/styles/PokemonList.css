@@ -88,3 +88,13 @@
     background-color: #cccccc; /* Gray when disabled */
     cursor: not-allowed;
 }
+
+.pokedex {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pokemon-search {
+    margin-right: 20px;
+}
